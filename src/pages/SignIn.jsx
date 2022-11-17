@@ -2,9 +2,13 @@ import {useState} from "react";
 import {BsEyeFill, BsEyeSlashFill} from "react-icons/bs";
 import {Link} from "react-router-dom";
 import OAuth from "../components/OAuth";
+import {signInWithEmailAndPassword, getAuth} from "firebase/auth";
+import {toast} from "react-toastify";
+import {useNavigate} from "react-router";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,6 +20,19 @@ const SignIn = () => {
       [e.target.id]: e.target.value,
     }))
   }
+  
+  const onSubmit = async (e) => {
+    e.preventDefault()
+    try{
+      const auth = getAuth()
+      const userCredentials = await signInWithEmailAndPassword(auth, email, password)
+      if(userCredentials.user){
+        navigate('/');
+      }
+    }catch(error){
+      toast.error('Wrong credentials')
+    }
+  }
   return (
     <section>
       <h1 className="text-3xl text-center mt-5 font-bold">Sign In</h1>
@@ -24,7 +41,7 @@ const SignIn = () => {
           <img src="./assets/images/key.jpg" alt="key" className="w-full rounded-2xl"/>
         </div>
         <div className="md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form>
+          <form onSubmit={onSubmit}>
             <input
               type="email"
               id="email"
