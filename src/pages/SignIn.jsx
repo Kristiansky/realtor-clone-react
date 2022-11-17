@@ -30,7 +30,7 @@ const SignIn = () => {
         navigate('/');
       }
     }catch(error){
-      toast.error('Wrong credentials')
+      toast.error(error.message)
     }
   }
   return (
