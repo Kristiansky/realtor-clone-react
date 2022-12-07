@@ -1,11 +1,12 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {getAuth, updateProfile} from "firebase/auth";
 import {useNavigate} from "react-router";
 import {toast} from "react-toastify";
-import {updateDoc, doc} from "firebase/firestore";
+import {updateDoc, doc, getDoc, getDocs, collection, query, where, orderBy} from "firebase/firestore";
 import {db} from "../firebase";
 import {FcHome} from "react-icons/fc";
 import {Link} from "react-router-dom";
+import ListingItem from "./ListingItem";
 
 const Profile = () => {
   const auth = getAuth()
@@ -15,6 +16,8 @@ const Profile = () => {
     name: auth.currentUser.displayName,
     email: auth.currentUser.email
   });
+  const [listings, setListings] = useState(null)
+  const [loading, setLoading] = useState(true)
   const {name, email} = formData;
   const onLogout = () => {
     auth.signOut()
@@ -46,6 +49,24 @@ const Profile = () => {
       toast.error(error.message)
     }
   }
+  
+  useEffect(()=>{
+    async function fetchUserListing(){
+      const listingRef = collection(db, "listings");
+      const q = query(listingRef, where("userRef", "==", auth.currentUser.uid), orderBy("timestamp", "desc"))
+      const querySnap = await getDocs(q);
+      let listings = [];
+      querySnap.forEach((doc)=>{
+        return listings.push({
+          id: doc.id,
+          data: doc.data()
+        })
+      })
+      setListings(listings)
+      setLoading(false)
+    }
+    fetchUserListing();
+  }, [auth.currentUser.uid])
   
   return (
     <>
@@ -80,6 +101,18 @@ const Profile = () => {
           </button>
         </div>
       </section>
+      <div className="max-w-6xl px-3 mt-6 mx-auto">
+        {!loading && listings.length > 0 && (
+          <>
+            <h2 className="text-2xl text-center font-semibold ">My Listings</h2>
+            <ul>
+              {listings.map((listing) => (
+                <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
     </>
   )
 }
