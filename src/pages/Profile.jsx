@@ -6,7 +6,7 @@ import {updateDoc, doc, getDoc, getDocs, collection, query, where, orderBy, dele
 import {db} from "../firebase";
 import {FcHome} from "react-icons/fc";
 import {Link} from "react-router-dom";
-import ListingItem from "./ListingItem";
+import ListingItem from "../components/ListingItem";
 
 const Profile = () => {
   const auth = getAuth()
