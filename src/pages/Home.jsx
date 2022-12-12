@@ -105,7 +105,7 @@ const Home = () => {
         {rentListings && rentListings.length > 0 && (
           <div className="m-2 mb-6">
             <h2 className="px-3 text-2xl mt-6 font-semibold">Rent-a-place</h2>
-            <Link to="/rent">
+            <Link to="/category/rent">
               <p className="px-3 text-sm text-blue-600 hover:text-blue-700 transition duration-150 ease-in-out">Show more offers</p>
             </Link>
             <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -118,7 +118,7 @@ const Home = () => {
         {saleListings && saleListings.length > 0 && (
           <div className="m-2 mb-6">
             <h2 className="px-3 text-2xl mt-6 font-semibold">For sale</h2>
-            <Link to="/sale">
+            <Link to="/category/sell">
               <p className="px-3 text-sm text-blue-600 hover:text-blue-700 transition duration-150 ease-in-out">Show more offers</p>
             </Link>
             <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
